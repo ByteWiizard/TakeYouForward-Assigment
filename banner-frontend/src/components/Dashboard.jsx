@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleBanner } from '../redux/visibleReducer';
 
 const Dashboard = () => {
     const [description, setDescription] = useState('');
@@ -8,6 +10,11 @@ const Dashboard = () => {
     const [time, setTime] = useState('');
     const [link, setLink] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+
+    const dispatch = useDispatch();
+    const isVisible = useSelector((state) => state.banner.isVisible);
+
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -46,6 +53,11 @@ const Dashboard = () => {
             }, 3000);
         }
     }, [errorMessage])
+
+    const handleToggle = () => {
+        dispatch(toggleBanner());
+    };
+
 
     return (
         <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
@@ -117,6 +129,17 @@ const Dashboard = () => {
                         className="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 transition duration-300"
                     >
                         Update Banner
+                    </button>
+                </div>
+
+                <div className="mt-6 text-center">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">Show Banner</label>
+                    <button
+                        type="button"
+                        onClick={handleToggle}
+                        className={`w-full px-3 py-2 font-bold rounded-lg ${isVisible ? 'bg-green-500 text-white' : 'bg-red-600 text-gray-800'} hover:bg-green-600 transition duration-300`}
+                    >
+                        {isVisible ? 'ON' : 'OFF'}
                     </button>
                 </div>
             </form>

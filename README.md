@@ -1,7 +1,5 @@
 # TakeYouForward Assignment: Dynamic Banner Management
 
-![Project Banner](https://via.placeholder.com/1000x300) <!-- Replace with an actual image if available -->
-
 ## Overview
 
 This project is a dynamic banner management system built with a React frontend and an Express backend, powered by CockroachDB. The system allows users to create, update, and manage a promotional banner that includes a countdown timer displayed on a web page. The project also includes secure password management to protect sensitive actions like updating the banner.

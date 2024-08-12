@@ -3,6 +3,9 @@ import axios from 'axios';
 import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleBanner } from '../redux/visibleReducer';
+import { Eye, EyeOff } from 'lucide-react';
+
+
 
 const Dashboard = () => {
     const [description, setDescription] = useState('');
@@ -10,19 +13,22 @@ const Dashboard = () => {
     const [time, setTime] = useState('');
     const [link, setLink] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordVisible, setPasswordVisible] = useState(false); // State for password visibility
     const [errorMessage, setErrorMessage] = useState('');
 
     const dispatch = useDispatch();
     const isVisible = useSelector((state) => state.banner.isVisible);
-
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         setErrorMessage('');
 
-        if (!date && !time && !description && !link) {
+        if (!password) {
+            setErrorMessage('Please enter the password');
+            return;
+        }
+        else if (!date && !time && !description && !link) {
             setErrorMessage('Please provide any data to change');
             return;
         }
@@ -31,6 +37,12 @@ const Dashboard = () => {
             return;
         }
         const timer = date && time ? moment(`${date} ${time}`).format('YYYY-MM-DD HH:mm:ssZ') : '';
+
+        const now = moment();
+        if (timer && moment(timer).isBefore(now)) {
+            setErrorMessage('The timer cannot be set to a past date and time.');
+            return;
+        }
 
         const data = { description, timer, link, password };
 
@@ -63,6 +75,9 @@ const Dashboard = () => {
         dispatch(toggleBanner());
     };
 
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible);
+    };
 
     return (
         <div className="max-w-lg mx-auto mt-10 p-8 bg-white rounded-lg shadow-lg">
@@ -128,18 +143,25 @@ const Dashboard = () => {
                     />
                 </div>
 
-                <div className="mb-6">
-                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="link">
+                <div className="mb-6 relative">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
                         Enter Your Password
                     </label>
                     <input
                         id="password"
-                        type="password"
+                        type={passwordVisible ? "text" : "password"}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-indigo-500"
                         placeholder="Password"
                     />
+                    <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="absolute inset-y-0 mt-6 right-0 flex justify-center items-center px-3 text-gray-600"
+                    >
+                        {passwordVisible ? <Eye /> : <EyeOff />} {/* Use appropriate icons here */}
+                    </button>
                 </div>
 
                 <div className="text-center">

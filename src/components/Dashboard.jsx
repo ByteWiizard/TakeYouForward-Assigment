@@ -47,7 +47,7 @@ const Dashboard = () => {
         const data = { description, timer, link, password };
 
         try {
-            const response = await axios.put('http://localhost:8000/api/update-banner-details', data);
+            const response = await axios.put('https://tuf-assignment-backend-rw56.onrender.com/api/update-banner-details', data);
             if (response.data.success) {
                 alert('Banner updated successfully!');
             } else {

@@ -12,7 +12,7 @@ const ChangePass = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put('http://localhost:8000/api/change-password', {
+            const response = await axios.put('https://tuf-assignment-backend-rw56.onrender.com/api/change-password', {
                 oldPassword,
                 newPassword,
             });

@@ -16,7 +16,7 @@ const Banner = () => {
     useEffect(() => {
         const fetchBanner = async () => {
             try {
-                const response = await axios.get('http://localhost:8000/api/get-banner-details');
+                const response = await axios.get('https://tuf-assignment-backend-rw56.onrender.com/api/get-banner-details');
                 setDescription(response.data.description);
                 setLink(response.data.link);
                 setEndTime(response.data.timer);

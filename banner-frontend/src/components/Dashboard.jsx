@@ -9,6 +9,7 @@ const Dashboard = () => {
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
     const [link, setLink] = useState('');
+    const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
 
     const dispatch = useDispatch();
@@ -31,7 +32,7 @@ const Dashboard = () => {
         }
         const timer = date && time ? moment(`${date} ${time}`).format('YYYY-MM-DD HH:mm:ssZ') : '';
 
-        const data = { description, timer, link };
+        const data = { description, timer, link, password };
 
         try {
             const response = await axios.put('http://localhost:8000/api/update-banner-details', data);
@@ -41,8 +42,12 @@ const Dashboard = () => {
                 alert('Failed to update banner.');
             }
         } catch (error) {
-            console.error('Error updating banner:', error);
-            alert('Error updating banner.');
+            if (error.response && error.response.data.error) {
+                setErrorMessage(error.response.data.error);
+            } else {
+                console.error('Error updating banner:', error);
+                alert('Error updating banner.');
+            }
         }
     };
 
@@ -120,6 +125,20 @@ const Dashboard = () => {
                         onChange={(e) => setLink(e.target.value)}
                         className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-indigo-500"
                         placeholder="Enter banner link"
+                    />
+                </div>
+
+                <div className="mb-6">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="link">
+                        Enter Your Password
+                    </label>
+                    <input
+                        id="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:border-indigo-500"
+                        placeholder="Password"
                     />
                 </div>
 

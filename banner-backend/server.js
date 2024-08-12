@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 const moment = require('moment');
 const { Client } = require('pg');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 
@@ -27,7 +28,7 @@ client.connect(err => {
 
 app.get('/api/get-banner-details', async (req, res) => {
     try {
-        const results = await client.query('SELECT * FROM banners LIMIT 1');        
+        const results = await client.query('SELECT * FROM banners LIMIT 1');
         const banner = results.rows[0];
         console.log(results.rows[0]);
         if (banner) {
@@ -44,7 +45,14 @@ app.get('/api/get-banner-details', async (req, res) => {
 
 
 app.put('/api/update-banner-details', async (req, res) => {
-    const { description, timer, link } = req.body;
+    const { description, timer, link, password } = req.body;
+    const results = await client.query('SELECT * FROM passwords LIMIT 1');
+    const OriginalPassword = results.rows[0].pass
+
+    const isPasswordValid = await bcrypt.compare(password, OriginalPassword);
+    if (!isPasswordValid) {
+        return res.status(401).json({ error: 'Password does not match.' });
+    }
     let updateFields = [];
     let updateValues = [];
 

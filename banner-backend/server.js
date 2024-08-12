@@ -27,35 +27,7 @@ client.connect(err => {
 
 app.get('/api/get-banner-details', async (req, res) => {
     try {
-        const results = await client.query('SELECT * FROM banners LIMIT 1');
-
-        // useEffect(() => {
-        //     if (endTime) {
-        //         const intervalId = setInterval(() => {
-        //             const now = moment();
-        //             const end = moment(endTime);
-        //             const diff = end.diff(now);
-        
-        //             if (diff > 0) {
-        //                 const duration = moment.duration(diff);
-        //                 const days = Math.floor(duration.asDays());
-        //                 const hours = duration.hours();
-        //                 const minutes = duration.minutes();
-        //                 const seconds = duration.seconds();
-        
-        //                 setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
-        //             } else {
-        //                 setTimeLeft("00d 00h 00m 00s");
-        //             }
-        //         }, 1000);
-        
-        //         return () => clearInterval(intervalId);
-        //     }
-        // }, [endTime]);
-        
-
-
-
+        const results = await client.query('SELECT * FROM banners LIMIT 1');        
         const banner = results.rows[0];
         console.log(results.rows[0]);
         if (banner) {
@@ -82,8 +54,9 @@ app.put('/api/update-banner-details', async (req, res) => {
     }
 
     if (timer) {
+        const formattedTimer = moment(timer).format('YYYY-MM-DD HH:mm:ssZ');  // Ensure timer is in correct format
         updateFields.push('timer = $' + (updateFields.length + 1));
-        updateValues.push(timer);
+        updateValues.push(formattedTimer);
     }
 
     if (link) {
@@ -95,7 +68,7 @@ app.put('/api/update-banner-details', async (req, res) => {
         return res.status(400).json({ error: 'No fields provided for update.' });
     }
 
-    const bannerId = '994149630623383553'; // ID is now a string
+    const bannerId = '994172468454785025';
     updateValues.push(bannerId);
 
     const query = `UPDATE banners SET ${updateFields.join(', ')} WHERE id = $${updateValues.length}`;
@@ -104,12 +77,10 @@ app.put('/api/update-banner-details', async (req, res) => {
         await client.query(query, updateValues);
         res.json({ success: true, message: 'Banner updated successfully.' });
     } catch (err) {
-        console.log(err);
         console.error('Error updating banner data:', err);
         res.status(500).json({ error: 'An error occurred while updating banner data.' });
     }
 });
-
 
 
 

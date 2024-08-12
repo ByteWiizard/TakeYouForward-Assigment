@@ -62,6 +62,19 @@ const Sidebar = () => {
                             Dashboard
                         </NavLink>
                     </li>
+
+                    {/* <li className="mb-2">
+                        <NavLink
+                            to="/change-password"
+                            className={({ isActive }) =>
+                                isActive
+                                    ? "block py-2 px-4 font-semibold rounded hover:bg-gray-700 underline"
+                                    : "block py-2 px-4 font-semibold rounded hover:bg-gray-700"
+                            }
+                        >
+                            Password
+                        </NavLink>
+                    </li> */}
                 </ul>
             </div>
         </div>

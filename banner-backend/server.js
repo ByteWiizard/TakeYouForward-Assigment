@@ -91,6 +91,33 @@ app.put('/api/update-banner-details', async (req, res) => {
 });
 
 
+app.put('/api/change-password', async (req, res) => {
+    const { oldPassword, newPassword } = req.body;
+
+    try {
+        
+        const result = await client.query('SELECT pass FROM passwords WHERE id = 1');
+        const hashedPassword = result.rows[0].pass;
+
+       
+        const isMatch = await bcrypt.compare(oldPassword, hashedPassword);
+        if (!isMatch) {
+            return res.status(401).json({ error: 'Old password is incorrect.' });
+        }
+
+       
+        const newHashedPassword = await bcrypt.hash(newPassword, 10);
+
+       
+        await client.query('UPDATE passwords SET pass = $1 WHERE id = 1', [newHashedPassword]);
+
+        res.json({ success: true, message: 'Password updated successfully.' });
+    } catch (err) {
+        console.error('Error updating password:', err);
+        res.status(500).json({ error: 'An error occurred while updating the password.' });
+    }
+
+})
 
 
 const PORT = process.env.PORT || 8000;
